@@ -19,8 +19,6 @@ public class Word extends Token{
 		app = new Word("app", Tag.APP),
 		start = new Word("start", Tag.START),
 		stop = new Word("stop", Tag.STOP),
-		integer = new Word("integer", Tag.INTEGER),
-		real = new Word("real", Tag.REAL),
 		ifcause = new Word("if", Tag.IF); 
 		//continuar palavras reservadas
 		

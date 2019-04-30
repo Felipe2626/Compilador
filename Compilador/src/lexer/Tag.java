@@ -5,7 +5,7 @@ public class Tag {
 		APP = 256,
 		START = 257,
 		STOP = 258,
-		INTEGER = 259,
+		INT = 259,
 		REAL = 260,
 		IF = 261,
 		THEN = 262,
@@ -32,5 +32,6 @@ public class Tag {
 		AND = 283, //&&
 		OPENCUR = 284, //{
 		CLOSECUR = 285, //}
-		NUM = 286;		
+		NUM = 286,	
+		ID = 287;
 }
