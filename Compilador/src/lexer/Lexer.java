@@ -1,22 +1,25 @@
 package lexer;
 import java.io.*;
 import java.util.*;
-import symbols.*;
+//import symbols.*;
 
 public class Lexer {
 	public static int line = 1;
 	char peek = ' ';
-	Hashtable words = new Hashtable();
+	BufferedReader buffRead;
+	Hashtable<String, Word> words = new Hashtable<String, Word>();
+	
 	void reserve(Word w) {
 		words.put(w.lexeme, w);
 	}
-	public Lexer() {
+	public Lexer(FileReader fread ) {
+		buffRead = new BufferedReader(fread);
 		reserve(new Word("if", Tag.IF));
 		reserve(new Word("else", Tag.ELSE));
 		reserve(new Word("while", Tag.WHILE));
 		reserve(new Word("do", Tag.DO));
-		reserve(Type.Int);
-		reserve(Type.Real);
+		//reserve(Type.Int);
+		//reserve(Type.Real);
 		
 	}
 	void readch() throws IOException {

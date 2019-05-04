@@ -33,5 +33,6 @@ public class Tag {
 		OPENCUR = 284, //{
 		CLOSECUR = 285, //}
 		NUM = 286,	
-		ID = 287;
+		ID = 287,
+		BASIC = 288;
 }
