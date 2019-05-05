@@ -1,7 +1,7 @@
 package lexer;
 import java.io.*;
 import java.util.*;
-//import symbols.*;
+import symbols.*;
 
 public class Lexer {
 	public static int line = 1;
@@ -18,8 +18,8 @@ public class Lexer {
 		reserve(new Word("else", Tag.ELSE));
 		reserve(new Word("while", Tag.WHILE));
 		reserve(new Word("do", Tag.DO));
-		//reserve(Type.Int);
-		//reserve(Type.Real);
+		reserve(Type.INTEGER);
+		reserve(Type.REAL);
 		
 	}
 	void readch() throws IOException {
@@ -55,7 +55,6 @@ public class Lexer {
 		case '>':
 			if(readch('=')) return Word.ge; else return new Token('>');
 		}
-		
 		if(Character.isDigit(peek)) {
 			int value = 0;
 			do {

@@ -19,8 +19,16 @@ public class Word extends Token{
 		app = new Word("app", Tag.APP),
 		start = new Word("start", Tag.START),
 		stop = new Word("stop", Tag.STOP),
-		ifcause = new Word("if", Tag.IF); 
-		//continuar palavras reservadas
+		ifcause = new Word("if", Tag.IF), 
+	    not = new Word ("!",Tag.NOT),
+	    minus = new Word ("-",Tag.MINUS),
+	    plus = new Word ("+",Tag.PLUS),
+	    mult = new Word ("*",Tag.MULT), 
+	    div = new Word ("/",Tag.DIV),
+	    opencur = new Word ("{",Tag.OPENCUR),
+	    closecur = new Word ("}",Tag.CLOSECUR),
+	    att = new Word (":=",Tag.ATT);
+	
 		
 		
 		
