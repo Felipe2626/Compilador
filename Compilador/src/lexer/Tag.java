@@ -35,5 +35,6 @@ public class Tag {
 		NUM = 286,	
 		ID = 287,
 		BASIC = 288,
-		ATT = 289; //:=
+		ATT = 289, //:=
+		TEMP = 290;
 }

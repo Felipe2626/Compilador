@@ -36,7 +36,8 @@ public class Word extends Token{
 	    	div = new Word ("/",Tag.DIV),
 	    	opencur = new Word ("{",Tag.OPENCUR),
 	    	closecur = new Word ("}",Tag.CLOSECUR),
-	    	att = new Word (":=",Tag.ATT);
+	    	att = new Word (":=",Tag.ATT),
+	    	temp = new Word("t", Tag.TEMP);
 		
 
 		
