@@ -40,7 +40,12 @@ public class Lexer {
 			else if(peek == '\n') line = line + 1;
 			else break;
 		}
-		
+		//Descarta os comentario do lexico, EX "{Esse é um comentário}"
+		if(peek=='{') {
+			do {
+				readch();
+			}while(peek!='}');
+		}
 		switch(peek) {
 		case '&':
 			if(readch('&')) return Word.and; else return new Token('&');
