@@ -14,16 +14,28 @@ public class Lexer {
 	}
 	public Lexer(FileReader fread ) {
 		buffRead = new BufferedReader(fread);
+		reserve(new Word("start",Tag.START));
+		reserve(new Word("stop", Tag.STOP));
 		reserve(new Word("if", Tag.IF));
+		reserve(new Word("then", Tag.THEN));
+		reserve(new Word("end",Tag.END));
 		reserve(new Word("else", Tag.ELSE));
+		reserve(new Word("repeat",Tag.REPEAT));
+		reserve(new Word("do",Tag.DO));
+		reserve(new Word("read",Tag.READ));
+		reserve(new Word("write",Tag.WRITE));
+		reserve(new Word("until",Tag.UNTIL));
 		reserve(new Word("while", Tag.WHILE));
 		reserve(new Word("do", Tag.DO));
-		reserve(Type.INTEGER);
-		reserve(Type.REAL);
+		reserve(new Word("app", Tag.APP));
+		reserve (new Word("integer",Tag.INT )); //Declaração temporaria
+		reserve (new Word("real",Tag.REAL));  // Declaração temporaria
+		//reserve(Type.INTEGER);
+		//reserve(Type.REAL);
 		
 	}
 	void readch() throws IOException {
-		peek = (char)System.in.read();
+		peek = (char)buffRead.read();
 	}
 	
 	boolean readch(char c) throws IOException{
@@ -40,12 +52,14 @@ public class Lexer {
 			else if(peek == '\n') line = line + 1;
 			else break;
 		}
+
 		//Descarta os comentario do lexico, EX "{Esse é um comentário}"
 		if(peek=='{') {
 			do {
 				readch();
 			}while(peek!='}');
 		}
+		
 		switch(peek) {
 		case '&':
 			if(readch('&')) return Word.and; else return new Token('&');
