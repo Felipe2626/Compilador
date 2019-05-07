@@ -5,21 +5,15 @@ import symbols.*;
 
 public class Lexer {
 	public static int line = 1;
-	char peek = ' ';
+	Character peek = ' ';
 	BufferedReader buffRead;
 	Hashtable<String, Word> words = new Hashtable<String, Word>();
-    FileInputStream fis ;
+	
 	void reserve(Word w) {
 		words.put(w.lexeme, w);
 	}
-	public Lexer(File fread ) {
-		//buffRead = new BufferedReader(fread);
-		try {
-			fis = new FileInputStream(fread);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public Lexer(FileReader fread ) {
+		buffRead = new BufferedReader(fread);
 		reserve(new Word("start",Tag.START));
 		reserve(new Word("stop", Tag.STOP));
 		reserve(new Word("if", Tag.IF));
@@ -41,11 +35,13 @@ public class Lexer {
 		
 	}
 	void readch() throws IOException {
-	
-		peek = (char)fis.read();
-		if(peek==-1)
-			System.out.print("null");
-		
+		int val;
+		if((val = buffRead.read()) == -1) {
+			buffRead.close();
+			throw new EOFException();
+		}else {
+			peek=Carval;
+		}
 	}
 	
 	boolean readch(char c) throws IOException{
@@ -57,11 +53,13 @@ public class Lexer {
 	}
 	
 	public Token scan() throws IOException {
-		for( ; ; readch()) {
-			if(peek == ' ' || peek == '\t' ) continue;
+		do {
+			readch();
+			if(peek == ' ' ) continue;
 			else if(peek == '\n') line = line + 1;
 			else break;
-		}
+		}while(true);
+		
 		//Descarta os comentario ate ler fim de linha
 		if(peek=='%') {
 			do {
@@ -100,6 +98,21 @@ public class Lexer {
 			if(readch('=')) return Word.ge; else return new Token('>');
 		case ':':
 			if(readch('=')) return Word.att; else return null;
+		case '+':
+			return Word.plus;
+		case '-':
+			return Word.minus;
+		case '*':
+			return Word.mult;
+		case '/':
+			return Word.div;
+		case ',':
+			return Word.comma;
+		case '(':
+			return Word.openpar;
+		case ')':
+			return Word.closepar;
+
 		}
 		
 		if(Character.isDigit(peek)) {
@@ -134,8 +147,7 @@ public class Lexer {
 			words.put(s, w);
 			return w;
 		}
-		if(peek=='&')
-			return null;
+
 		//caracteres restantes nao identificados como tokens regulares
 		//criam-se tokens mesmo assim
 		Token tok = new Token(peek); 

@@ -37,7 +37,10 @@ public class Word extends Token{
 	    opencur = new Word ("{",Tag.OPENCUR),
 	    closecur = new Word ("}",Tag.CLOSECUR),
 	    att = new Word (":=",Tag.ATT),
-	    temp = new Word("t", Tag.TEMP);
+	    temp = new Word("t", Tag.TEMP),
+		openpar = new Word("(",Tag.OPENPAR),
+		closepar = new Word(")",Tag.CLOSEPAR),
+	    comma = new Word (",",Tag.COMMA);
 		
 
 		

@@ -7,9 +7,13 @@ public class Main {
 
 	public static void main(String[] args ) {// throws IOException
 		String filepath = new String ("src/Test/test2.txt");
-		File fr = null;
-		fr = new File(filepath);
-
+		FileReader fr = null;
+		try {
+			fr = new FileReader(filepath);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//Instacia a classe do lexer
 		Lexer lex = new Lexer(fr);
 		Token outT=null;
@@ -18,7 +22,7 @@ public class Main {
 		do {
 			try {
 				outT=lex.scan();
-				System.out.printf (outT.toString()+" ");
+				System.out.print (outT.toString()+" ");
 			} catch (IOException e ) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

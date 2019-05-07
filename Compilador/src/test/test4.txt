@@ -13,4 +13,4 @@ k := 4 + a $;
 write(i);
 write(j);
 write(k)
-stop
+stop 

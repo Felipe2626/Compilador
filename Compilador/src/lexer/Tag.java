@@ -37,5 +37,8 @@ public class Tag {
 		BASIC = 288,
 		ATT = 289, //:=
 		TEMP = 290,
-		LITERAL = 291;
+		LITERAL = 291,
+		OPENPAR = 292,
+		CLOSEPAR = 293,
+	    COMMA = 294; // ,
 }

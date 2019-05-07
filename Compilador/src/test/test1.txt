@@ -8,4 +8,4 @@ start
  result := (a + b) -;
  write(result);
  teste1 := 1
-stop &
+stop 
