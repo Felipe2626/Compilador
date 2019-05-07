@@ -8,12 +8,18 @@ public class Lexer {
 	char peek = ' ';
 	BufferedReader buffRead;
 	Hashtable<String, Word> words = new Hashtable<String, Word>();
-	
+    FileInputStream fis ;
 	void reserve(Word w) {
 		words.put(w.lexeme, w);
 	}
-	public Lexer(FileReader fread ) {
-		buffRead = new BufferedReader(fread);
+	public Lexer(File fread ) {
+		//buffRead = new BufferedReader(fread);
+		try {
+			fis = new FileInputStream(fread);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		reserve(new Word("start",Tag.START));
 		reserve(new Word("stop", Tag.STOP));
 		reserve(new Word("if", Tag.IF));
@@ -28,14 +34,18 @@ public class Lexer {
 		reserve(new Word("while", Tag.WHILE));
 		reserve(new Word("do", Tag.DO));
 		reserve(new Word("app", Tag.APP));
-		reserve (new Word("integer",Tag.INT )); //Declaração temporaria
-		reserve (new Word("real",Tag.REAL));  // Declaração temporaria
+		reserve (new Word("integer",Tag.INT )); //Declaracaoo temporaria
+		reserve (new Word("real",Tag.REAL));  // Declaracaoo temporaria
 		//reserve(Type.INTEGER);
 		//reserve(Type.REAL);
 		
 	}
 	void readch() throws IOException {
-		peek = (char)buffRead.read();
+	
+		peek = (char)fis.read();
+		if(peek==-1)
+			System.out.print("null");
+		
 	}
 	
 	boolean readch(char c) throws IOException{
@@ -52,13 +62,28 @@ public class Lexer {
 			else if(peek == '\n') line = line + 1;
 			else break;
 		}
-
-		//Descarta os comentario do lexico, EX "{Esse é um comentário}"
-		if(peek=='{') {
+		//Descarta os comentario ate ler fim de linha
+		if(peek=='%') {
 			do {
 				readch();
-			}while(peek!='}');
+			}while(peek!='\n');
 		}
+		//Le literal
+		if(peek=='{') {
+			StringBuffer buffer = new StringBuffer();
+			do {
+				readch();
+				buffer.append(peek);
+			}while(peek!='}');
+			Word w = (Word)words.get(buffer.toString());
+			if(w != null) {
+				return w;
+			}
+			w = new Word(buffer.toString(), Tag.LITERAL); //nao cria palavras repetidas
+			words.put(buffer.toString(), w);
+			return w;
+		}
+		
 		
 		switch(peek) {
 		case '&':
@@ -73,7 +98,10 @@ public class Lexer {
 			if(readch('=')) return Word.le; else return new Token('<');
 		case '>':
 			if(readch('=')) return Word.ge; else return new Token('>');
+		case ':':
+			if(readch('=')) return Word.att; else return null;
 		}
+		
 		if(Character.isDigit(peek)) {
 			int value = 0;
 			do {
@@ -106,7 +134,8 @@ public class Lexer {
 			words.put(s, w);
 			return w;
 		}
-		
+		if(peek=='&')
+			return null;
 		//caracteres restantes nao identificados como tokens regulares
 		//criam-se tokens mesmo assim
 		Token tok = new Token(peek); 

@@ -36,5 +36,6 @@ public class Tag {
 		ID = 287,
 		BASIC = 288,
 		ATT = 289, //:=
-		TEMP = 290;
+		TEMP = 290,
+		LITERAL = 291;
 }

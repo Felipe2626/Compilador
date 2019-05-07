@@ -31,13 +31,13 @@ public class Word extends Token{
 		le = new Word("<=", Tag.LE),
 		ge = new Word(">=", Tag.GE),
 		app = new Word("app", Tag.APP),
-	    	plus = new Word ("+",Tag.PLUS),
-	    	mult = new Word ("*",Tag.MULT), 
-	    	div = new Word ("/",Tag.DIV),
-	    	opencur = new Word ("{",Tag.OPENCUR),
-	    	closecur = new Word ("}",Tag.CLOSECUR),
-	    	att = new Word (":=",Tag.ATT),
-	    	temp = new Word("t", Tag.TEMP);
+	    plus = new Word ("+",Tag.PLUS),
+	    mult = new Word ("*",Tag.MULT), 
+	    div = new Word ("/",Tag.DIV),
+	    opencur = new Word ("{",Tag.OPENCUR),
+	    closecur = new Word ("}",Tag.CLOSECUR),
+	    att = new Word (":=",Tag.ATT),
+	    temp = new Word("t", Tag.TEMP);
 		
 
 		
