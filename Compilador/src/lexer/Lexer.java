@@ -40,7 +40,7 @@ public class Lexer {
 			buffRead.close();
 			throw new EOFException();
 		}else {
-			peek=Carval;
+			peek=(char)val;
 		}
 	}
 	
