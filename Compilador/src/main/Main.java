@@ -22,7 +22,7 @@ public class Main {
 		do {
 			try {
 				outT=lex.scan();
-				System.out.print (outT.toString()+" ");
+			//	System.out.print (outT.toString()+"_");
 			} catch (IOException e ) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

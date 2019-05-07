@@ -5,14 +5,16 @@ import symbols.*;
 
 public class Lexer {
 	public static int line = 1;
-	Character peek = ' ';
+	char peek;
+	String test ;
 	BufferedReader buffRead;
 	Hashtable<String, Word> words = new Hashtable<String, Word>();
-	
+	Scanner sc;	
 	void reserve(Word w) {
 		words.put(w.lexeme, w);
 	}
 	public Lexer(FileReader fread ) {
+
 		buffRead = new BufferedReader(fread);
 		reserve(new Word("start",Tag.START));
 		reserve(new Word("stop", Tag.STOP));
@@ -41,6 +43,8 @@ public class Lexer {
 			throw new EOFException();
 		}else {
 			peek=(char)val;
+			test = new String((char)val+"");
+			System.out.print(test);
 		}
 	}
 	
