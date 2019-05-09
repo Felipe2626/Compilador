@@ -1,5 +1,5 @@
 app
- int; a;
+ int a;
  int b;
  real f, _f
 start

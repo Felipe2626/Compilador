@@ -40,5 +40,6 @@ public class Tag {
 		LITERAL = 291,
 		OPENPAR = 292,
 		CLOSEPAR = 293,
-	    COMMA = 294; // ,
+	    COMMA = 294, // ,
+		DOTCOMMA = 295;//;
 }

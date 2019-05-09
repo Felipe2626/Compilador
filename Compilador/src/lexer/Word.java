@@ -40,9 +40,10 @@ public class Word extends Token{
 	    temp = new Word("t", Tag.TEMP),
 		openpar = new Word("(",Tag.OPENPAR),
 		closepar = new Word(")",Tag.CLOSEPAR),
-	    comma = new Word (",",Tag.COMMA);
-		
-
+	    comma = new Word (",",Tag.COMMA),
+		dotcomma = new Word (";",Tag.COMMA),
+		integer = new Word ("int",Tag.INT),
+		real = new Word ("real",Tag.REAL);
 		
 		
 		
