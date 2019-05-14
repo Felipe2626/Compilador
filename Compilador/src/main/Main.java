@@ -10,7 +10,7 @@ import symbols.Env;
 public class Main {
 
 	public static void main(String[] args ) {// throws IOException
-		String filepath = new String ("src/Test/test6.txt");
+		String filepath = new String ("src/Test/test8.txt");
 		FileReader fr = null;
 		ArrayList<Token> lToken = new ArrayList<Token>();
 		try {

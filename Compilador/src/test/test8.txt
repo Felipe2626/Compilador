@@ -1,11 +1,14 @@
-app teste1
- int a, b, c;
- int result
-start
- read (a);
- read (c);
- b := 10.23 + a + c;
- result := (a + b) -;
- write(result);
- teste1 := 1
-stop 
+App mediapositiva
+ int input
+ real media;
+ start
+		 media:=0.0;
+		 repeat	
+			 write({Insira um valor: });
+			 read (input);
+			 media+=media+input;
+			 media:=media/2;
+		 until(cont=(-1));
+		 write({Media: });
+		 write (media)
+  stop

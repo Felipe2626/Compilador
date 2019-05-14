@@ -75,7 +75,7 @@ public class Lexer {
 		do {
 			readch();
 			if(peek == ' ' ) continue;
-			else if(peek == '\n' || peek=='\r') line = line + 1;
+			else if(peek == '\n' || peek=='\r' || peek=='\t') line = line + 1;
 			else break;
 		}while(true);
 		
