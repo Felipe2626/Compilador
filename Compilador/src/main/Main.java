@@ -2,14 +2,16 @@ package main;
 import java.io.*;
 import java.util.ArrayList;
 
+
 import lexer.*;
 import symbols.Env; 
-//import parser.*; import parser.*;
+import sintatico.*;
 
 
 public class Main {
 
 	public static void main(String[] args ) {// throws IOException
+		//LE o arquivo
 		String filepath;
 		try {
 			filepath=new String (args[0]);
@@ -24,14 +26,11 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//Instacia a classe do lexer
-		Env env = new Env();
 
-		Token outT=null;
-		Lexer lex = new Lexer(fr,env);
+		Parser parser1 = new Parser(fr);
 		
 		//Faz a leitura de todos os tokens
-		do {
+		/*do {
 			try {
 				outT=lex.scan();
 			} catch (IOException e ) {
@@ -45,10 +44,10 @@ public class Main {
 			}
 			if(outT!=null)
 				lToken.add(outT);
-		}while(outT!=null);
+		}while(outT!=null);*/
 		
 		
-		System.out.printf("Token\tTag\n");
+		/*System.out.printf("Token\tTag\n");
 		System.out.printf("----------------\n");
 		for (Token token : lToken) {
 			System.out.printf(token.toString()+"\t"+token.tag+"\n");
@@ -56,7 +55,7 @@ public class Main {
 		System.out.printf("\nTabela de Simbolos\n");
 		System.out.printf("Tipo\tNome\tValor\n");
 		System.out.printf("-------------------------\n");
-		env.showItens();
+		env.showItens();*/
 		
 	}
 	
