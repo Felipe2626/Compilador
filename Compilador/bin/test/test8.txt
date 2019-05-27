@@ -1,0 +1,14 @@
+App mediapositiva
+ int input
+ real media;
+ start
+		 media:=0.0;
+		 repeat	
+			 write({Insira um valor: });
+			 read (input);
+			 media+=media+input;
+			 media:=media/2;
+		 until(cont=(-1));
+		 write({Media: });
+		 write (media)
+  stop
