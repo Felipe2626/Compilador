@@ -27,8 +27,8 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		Parser parser1 = new Parser(fr);
-		
+		Parser parser = new Parser(fr);
+		parser.S();
 		//Faz a leitura de todos os tokens
 		/*do {
 			try {

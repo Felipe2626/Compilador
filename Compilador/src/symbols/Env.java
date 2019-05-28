@@ -29,7 +29,7 @@ public class Env {
 	public Env getUp() {
 		return up;
 	}*/
-	public void put( Id i,Token w) {
+	public void put( Id i,Token w) { //ID guarda o no nome //guarda a tipagem
 		table.put(i,w);
 		
 	}

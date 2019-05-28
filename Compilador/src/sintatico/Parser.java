@@ -13,16 +13,19 @@ public class Parser {
 	Lexer lex;
 	Env env = new Env();
 	int tok;
+	int linha;
 	public Parser(FileReader fr) {
 		// TODO Auto-generated constructor stub
 		env = new Env();
 		lex  = new Lexer(fr,env);
+		linha=0;
 	}
 
 
 	void getToken() {//Get next token
 		try {
 			tok=lex.scan().getTag();
+			linha=lex.getlinha();
 		} catch (IOException e) {
 			// TODO Auto-generated  catch block
 			System.out.printf("Erro ao ler token");
@@ -37,7 +40,7 @@ public class Parser {
 	void error() {
 		System.out.printf("!Erro:Get next token!\n");
 	}
-	void S() {//Implement program,identifier
+	public void S() {//Implement program,identifier
 		getToken();
 		eat(Tag.APP);
 		eat(Tag.ID);
@@ -49,13 +52,13 @@ public class Parser {
 		stmtlist();
 		eat(Tag.STOP);
 	}
-	void decllist(){
+	void decllist(){ //decl-list,decl, indenfier
 		do {
 			if(tok==Tag.INT) {
 				eat(Tag.INT);
 				do {
 					eat(Tag.ID);
-					if(tok==Tag.DOTCOMMA) {
+					if(tok==Tag.DOTCOMMA) {//;
 						eat(Tag.DOTCOMMA);
 						break;
 					}

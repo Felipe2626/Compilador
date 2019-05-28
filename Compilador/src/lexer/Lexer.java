@@ -158,7 +158,7 @@ public class Lexer {
 				realValue = realValue + Character.digit(peek, 10) / fraction; 
 				fraction = fraction*10;
 			}
-			return new Real(realValue);
+			return new Num(realValue);
 		}
 		if (Character.isLetter(peek) || peek == '_') { //adaptado para suportar underscore
 		
@@ -180,7 +180,7 @@ public class Lexer {
 				return w;
 			}
 			w = new Word(s, Tag.ID); //nao cria palavras repetidas
-			setTableSymbol(w);
+			setTableSymbol(w); //Guarda na tabela de simbolos
 			//env.put( );
 			words.put(s, w);
 			return w;
@@ -201,15 +201,18 @@ public class Lexer {
 		}
 	}
 	void setTableSymbol(Word w) {
-		if(type!=0) {
+		if(type!=0) { //Se foi lido um tipo antes de um ; in
 		  Word wtipo = null;
-		  Id ide = new Id(w.toString(),"");
+		  Id ide = new Id(w.toString(),""); 
 		  if(type==Tag.INT)
 			  wtipo=words.get("int");
 		  if(type==Tag.REAL)
 			  wtipo=words.get("real");
 		  env.put(ide,wtipo);
 		}
+	}
+	public int getlinha() {
+		return line;
 	}
 
 }
