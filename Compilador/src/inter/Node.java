@@ -2,11 +2,12 @@ package inter;
 import lexer.*;
 
 public class Node {
-	int lexline = 0;
-	Node() { lexline = Lexer.line;}
+	/*int lexline = 0;
+	Node() { 
+		//lexline = Lexer.line;}
 	void error (String s){
 		throw new Error("Erro proximo da linha " + lexline + ": " +s);
-	}
+	}*/
 	//funcoes usadas para emitir codigo de tres enderecos
 	static int labels = 0;
 	public int newlabel() {

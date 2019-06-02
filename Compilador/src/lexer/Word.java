@@ -28,6 +28,8 @@ public class Word extends Token{
 		or = new Word("||", Tag.OR),
 		eq = new Word("=", Tag.EQ), //usando apenas = nao ==
 		ne = new Word("!=", Tag.NE),
+		lt = new Word("<", Tag.LT),
+		gt = new Word(">", Tag.GT),
 		le = new Word("<=", Tag.LE),
 		ge = new Word(">=", Tag.GE),
 		app = new Word("app", Tag.APP),
@@ -41,15 +43,8 @@ public class Word extends Token{
 		openpar = new Word("(",Tag.OPENPAR),
 		closepar = new Word(")",Tag.CLOSEPAR),
 	    comma = new Word (",",Tag.COMMA),
-		dotcomma = new Word (";",Tag.COMMA),
+		dotcomma = new Word (";",Tag.DOTCOMMA),
 		integer = new Word ("int",Tag.INT),
 		real = new Word ("real",Tag.REAL);
-		
-		
-		
-		
-		
-		
-		
 		
 }

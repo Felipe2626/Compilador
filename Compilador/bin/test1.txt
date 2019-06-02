@@ -1,12 +1,9 @@
+naõ apreseta erro
+caso 1:
+	int a;
+	pala b;
+	
+coisa depois de end
 
-app teste1
-	 int a, b, c;
-	 int result
-	start
-	 read (a);
-	 read (c);
-	 b := 10.23 + a + c;
-	 result := (a + b) -;
-	 write(result);
-	 teste1 := 1
-stop
+	 end
+	 write({Maior idade: });

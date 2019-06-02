@@ -1,13 +1,16 @@
-App mediapositiva
- int input
+app mediapositiva
+ int input;
  real media;
- start
-		 media:=0.0;
+ start	
+ 		 if ( cont= (-1)) then
+ 		  	media:=0.0
+ 		 end;
+ 		 soma:=1+1+1+1*1*1;
 		 repeat	
 			 write({Insira um valor: });
 			 read (input);
-			 media+=media+input;
-			 media:=media/2;
+			 media:=media+input;
+			 media:=media/2
 		 until(cont=(-1));
 		 write({Media: });
 		 write (media)

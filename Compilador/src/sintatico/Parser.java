@@ -12,7 +12,7 @@ import symbols.Env;
 public class Parser {
 	Lexer lex;
 	Env env = new Env();
-	int tok;
+	Token tok;
 	int linha;
 	public Parser(FileReader fr) {
 		// TODO Auto-generated constructor stub
@@ -24,21 +24,32 @@ public class Parser {
 
 	void getToken() {//Get next token
 		try {
-			tok=lex.scan().getTag();
-			linha=lex.getlinha();
+			tok=lex.scan();
+			linha=lex.getline();
 		} catch (IOException e) {
 			// TODO Auto-generated  catch block
-			System.out.printf("Erro ao ler token");
-			e.printStackTrace();
+			System.out.printf("Erro lexico");
+			System.exit(0);
+			//e.printStackTrace();
 		}
 	}
 	void eat(int tag){
-		 if (tok==tag) getToken();
+		 if(tag==Tag.EOF) {
+			 System.out.printf("\nLeitura encerrada");
+		 }
+		 if (tok.getTag()==tag) getToken();
 		 else error();
 	}
 	
 	void error() {
-		System.out.printf("!Erro:Get next token!\n");
+		System.out.printf("Erro sintatico, token inesperado: '%s' - linha %d\n",tok.toString(),linha);
+		/*try {
+			throw new Exception();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		 System.exit(0); 
 	}
 	public void S() {//Implement program,identifier
 		getToken();
@@ -51,34 +62,37 @@ public class Parser {
 		eat(Tag.START);
 		stmtlist();
 		eat(Tag.STOP);
+		eat(Tag.EOF);
 	}
 	void decllist(){ //decl-list,decl, indenfier
 		do {
-			if(tok==Tag.INT) {
+			if(tok.getTag()==Tag.INT) {
 				eat(Tag.INT);
 				do {
 					eat(Tag.ID);
-					if(tok==Tag.DOTCOMMA) {//;
+					if(tok.getTag()==Tag.DOTCOMMA) {//;
 						eat(Tag.DOTCOMMA);
 						break;
 					}
 					eat(Tag.COMMA);
 				}while(true);
-			}else if(tok==Tag.REAL) {
+			}else if(tok.getTag()==Tag.REAL) {
 				eat(Tag.REAL);
 				do {
 					eat(Tag.ID);
-					if(tok==Tag.DOTCOMMA) {
+					if(tok.getTag()==Tag.DOTCOMMA) {
 						eat(Tag.DOTCOMMA);
 						break;
 					}
 					eat(Tag.COMMA);
 				}while(true);
 			}
-		}while(tok!=Tag.START);
+			
+			
+		}while(tok.getTag()!=Tag.START);
 	}
 	void stmtlist() {
-		switch(tok) {
+		switch(tok.getTag()) {
 			case Tag.WRITE:
 				eat(Tag.WRITE);eat(Tag.OPENPAR);
 				simpleexpr();
@@ -93,8 +107,8 @@ public class Parser {
 				condition();
 				eat(Tag.THEN);
 				stmtlist();
-				if(tok==Tag.END)eat(Tag.END);
-				else if(tok==Tag.ELSE) {
+				if(tok.getTag()==Tag.END)eat(Tag.END);
+				else if(tok.getTag()==Tag.ELSE) {
 					eat(Tag.ELSE);
 					stmtlist();
 					eat(Tag.END);
@@ -113,49 +127,73 @@ public class Parser {
 				eat(Tag.DO);
 				stmtlist();
 				eat(Tag.END);
+
 				break;
 			case Tag.ID:
 				eat(Tag.ID);
 				eat(Tag.ATT);
 				simpleexpr();
 				break;
+			case Tag.END:
+				break;
 			default :
 				error();
 		}
+		if(tok.getTag()==Tag.DOTCOMMA) {
+			eat(Tag.DOTCOMMA);
+			stmtlist();
+		}
+		
 	}
 	void simpleexpr() {//?ambiguidade
-		if(tok==Tag.OPENPAR||tok==Tag.NUM||tok==Tag.ID||tok==Tag.NOT||tok==Tag.MINUS)
-			term();
-		else {
-			simpleexpr();
+		//if(tok==Tag.OPENPAR||tok==Tag.NUM||tok==Tag.ID||tok==Tag.NOT||tok==Tag.MINUS)
+			
+		//else {
+		term();
+		while(tok.getTag()==Tag.PLUS||tok.getTag()==Tag.MINUS||tok.getTag()==Tag.OR)  {
 			addop();
 			term();
 		}
+		
+		//}
 	}
-	void factora() {
-		switch(tok){
+	void term() {//ambiguidade
+			factora();
+			while(tok.getTag()==Tag.MULT||tok.getTag()==Tag.DIV||tok.getTag()==Tag.AND) {
+				mulop();
+				factora();
+			}
+		
+	}
+	void factora() {	
+		switch(tok.getTag()){
 			case Tag.NOT:
 				eat(Tag.NOT);
+				factor();
 				break;
 			case Tag.MINUS:
 				eat(Tag.MINUS);
+				factor();
 				break;
 			default :
 				factor();
 		}
 	}
 	void factor() {
-		switch(tok) {
+		switch(tok.getTag()) {
 			case Tag.ID:
 				eat(Tag.ID);
 				break;
 			case Tag.NUM://Valores do tipo real, estão recebendo a tag da palavra reservada "real"
-				eat(Tag.INT);
+				eat(Tag.NUM);
 				break;
 			case Tag.OPENPAR:
 				eat(Tag.OPENPAR);
 				expression();
 				eat(Tag.CLOSEPAR);	
+				break;
+			case Tag.LITERAL:
+				eat(Tag.LITERAL);
 				break;
 			default :
 				error();
@@ -163,15 +201,15 @@ public class Parser {
 	}
 	void expression() {
 		simpleexpr();
-		if(tok==Tag.EQ||tok==Tag.GT||tok==Tag.GE
-				||tok==Tag.LT||tok==Tag.LE||tok==Tag.NE) {
+		while(tok.getTag()==Tag.EQ||tok.getTag()==Tag.GT||tok.getTag()==Tag.GE
+				||tok.getTag()==Tag.LT||tok.getTag()==Tag.LE||tok.getTag()==Tag.NE) {
 			relop();
 			simpleexpr();
 		}
 		
 	}
 	void relop() {
-		switch(tok) {
+		switch(tok.getTag()) {
 			case Tag.EQ:
 				eat(Tag.EQ);
 				break;
@@ -195,7 +233,7 @@ public class Parser {
 		}
 	}
 	void addop() {
-		switch(tok) {
+		switch(tok.getTag()) {
 			case Tag.PLUS:
 				eat(Tag.PLUS);
 				break;
@@ -210,7 +248,7 @@ public class Parser {
 		}		
 	}
 	void mulop() {
-		switch(tok) {
+		switch(tok.getTag()) {
 			case Tag.MULT:
 				eat(Tag.MULT);
 				break;
@@ -224,16 +262,7 @@ public class Parser {
 				error();
 		}
 	}
-	void term() {//ambiguidade
-		if(tok==Tag.OPENPAR||tok==Tag.ID||tok==Tag.NUM||tok==Tag.NOT||tok==Tag.MINUS)
-			factora();
-		else {
-			term();
-			mulop();
-			factora();
-		}
-		
-	}
+
 	void condition(){
 		expression();
 	}

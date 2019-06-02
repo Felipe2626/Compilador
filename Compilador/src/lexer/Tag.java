@@ -41,5 +41,6 @@ public class Tag {
 		OPENPAR = 292,
 		CLOSEPAR = 293,
 	    COMMA = 294, // ,
-		DOTCOMMA = 295;//;
+		DOTCOMMA = 295,//;
+		EOF=296; //Fim de arquivo
 }

@@ -9,7 +9,7 @@ public class Unary extends Op{
 		expr = x;
 		type = Type.max(Type.INTEGER, expr.type);
 		if(type == null) {
-			error("Erro de TIPO 2");
+	//		error("Erro de TIPO 2");
 		}
 	}
 	public Expr gen() {

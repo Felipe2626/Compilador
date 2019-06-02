@@ -6,7 +6,7 @@ import inter.Id;
 import symbols.*;
 
 public class Lexer {
-	public static int line = 1;
+	public int line ;
 	char peek;
 	char buff;
 	String test ;
@@ -19,6 +19,7 @@ public class Lexer {
 		words.put(w.lexeme, w);
 	}
 	public Lexer(FileReader fread,Env p_env ) {
+		 line=1;
 		env=p_env;
 		type=0;
 		buffRead = new BufferedReader(fread);
@@ -71,11 +72,14 @@ public class Lexer {
 	
 	public Token scan() throws IOException {
 		if(readerInt==-1)
-			throw new EOFException();
+			//throw new EOFException();
+			return new Token(Tag.EOF);
 		do {
 			readch();
+			if(readerInt==-1)
+				return new Token(Tag.EOF);
 			if(peek == ' ' ) continue;
-			else if(peek == '\n' || peek=='\r' || peek=='\t') line = line + 1;
+			else if(peek == '\n' || peek=='\r' || peek=='\t') {if(peek=='\n')line = line + 1;}
 			else break;
 		}while(true);
 		
@@ -87,6 +91,7 @@ public class Lexer {
 			do {
 				readch();	
 			}while(peek==' '||peek=='\n'||peek=='\r');
+			line++;
 		}
 		//Le literal
 		if(peek=='{') {
@@ -104,24 +109,28 @@ public class Lexer {
 				return w;
 			}
 			w = new Word(buffer.toString(), Tag.LITERAL); //nao cria palavras repetidas
-			
+			 buff=peek;
 			words.put(buffer.toString(), w);
 			return w;
 		}
-
+	
 		switch(peek) {
 		case '&':
-			if(readch('&')) return Word.and; else return new Token('&');
+			if(readch('&')) 
+				return Word.and; else 
+				{ buff=peek; return new Token('&');}
 		case '|':
-			if(readch('|')) return Word.or; else return new Token('|');
+			if(readch('|')) return Word.or; else { buff=peek;return new Token('|');}
 		case '=':
-			if(readch('=')) return Word.eq; else return new Token('=');
+			 return Word.eq;
 		case '!':
-			if(readch('=')) return Word.ne; else return new Token('!');
+			if(readch('=')) return Word.ne; 
+			else  { buff=peek;
+			return new Token('!');}
 		case '<':
-			if(readch('=')) return Word.le; else return new Token('<');
+			if(readch('=')) { return Word.le;} else{ buff=peek; return Word.lt;}
 		case '>':
-			if(readch('=')) return Word.ge; else return new Token('>');
+			if(readch('=')) return Word.ge; else { buff=peek; return Word.gt;}
 		case ':':
 			if(readch('=')) return Word.att; else throw new NullPointerException();
 		case '+':
@@ -148,9 +157,10 @@ public class Lexer {
 			do {
 				value = 10*value + Character.digit(peek, 10); readch();
 			} while (Character.isDigit(peek));
-			
+			buff=peek;
 			if(peek != '.') // um ponto so
 				return new Num(value);
+			readch();
 			float realValue = value; float fraction = 10;
 			for( ; ;) {
 				readch();
@@ -158,7 +168,9 @@ public class Lexer {
 				realValue = realValue + Character.digit(peek, 10) / fraction; 
 				fraction = fraction*10;
 			}
+			buff=peek;
 			return new Num(realValue);
+			
 		}
 		if (Character.isLetter(peek) || peek == '_') { //adaptado para suportar underscore
 		
@@ -189,9 +201,11 @@ public class Lexer {
 		//caracteres restantes nao identificados como tokens regulares
 		//criam-se tokens mesmo assim
 		Token tok = new Token(peek); 
-		peek = ' ';
+	//	peek = ' ';
 		//return tok;
-		throw new NullPointerException();
+		System.out.printf("\nErro lexico, simbolo inesperado: '%c' - linha %d\n",peek,line);
+	//s	throw new NullPointerException();
+		return tok;
 	}
 	void setTypeSymbol(Word w) {
 		if(w.toString().equals("real")) {
@@ -211,7 +225,7 @@ public class Lexer {
 		  env.put(ide,wtipo);
 		}
 	}
-	public int getlinha() {
+	public int getline() {
 		return line;
 	}
 
