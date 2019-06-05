@@ -16,7 +16,7 @@ public class Main {
 		try {
 			filepath=new String (args[0]);
 		}catch(Exception e) {
-			filepath=new String("src/test/test8.txt");
+			filepath=new String("src/test/test6.txt");
 		}
 		FileReader fr = null;
 		ArrayList<Token> lToken = new ArrayList<Token>();

@@ -13,7 +13,7 @@
 			 maior := b
 			 else
 			 maior := c
-		 end;
+		 end
 	 end;
 	 write({Maior idade: });
 	 write(maior)

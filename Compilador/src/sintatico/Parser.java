@@ -134,8 +134,7 @@ public class Parser {
 				eat(Tag.ATT);
 				simpleexpr();
 				break;
-			case Tag.END:
-				break;
+
 			default :
 				error();
 		}
