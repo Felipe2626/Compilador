@@ -1,6 +1,6 @@
 app pessoa
- int: cont;
- real altura, soma;
+ int cont;
+float altura, soma;
  start
 		 cont := 5;
 		 soma := 0;

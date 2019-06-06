@@ -86,6 +86,8 @@ public class Parser {
 					}
 					eat(Tag.COMMA);
 				}while(true);
+			}else {
+				error();
 			}
 			
 			
