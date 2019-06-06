@@ -99,8 +99,10 @@ public class Lexer {
 			do {
 				readch();
 				buffer.append(peek);
-				if(readerInt==-1)
-					throw new NullPointerException();
+				if(readerInt==-1) {
+					System.out.printf("\nErro lexico, simbolo inesperado: '%c' - linha %d\n",peek,line);
+
+				}
 			}while(peek!='}');
 			buffer.deleteCharAt(buffer.length()-1);
 			readch();
@@ -132,7 +134,7 @@ public class Lexer {
 		case '>':
 			if(readch('=')) return Word.ge; else { buff=peek; return Word.gt;}
 		case ':':
-			if(readch('=')) return Word.att; else throw new NullPointerException();
+			if(readch('=')) return Word.att; else  error();
 		case '+':
 			return Word.plus;
 		case '-':
@@ -203,7 +205,7 @@ public class Lexer {
 		Token tok = new Token(peek); 
 	//	peek = ' ';
 		//return tok;
-		System.out.printf("\nErro lexico, simbolo inesperado: '%c' - linha %d\n",peek,line);
+		error();
 	//s	throw new NullPointerException();
 		return tok;
 	}
@@ -228,5 +230,9 @@ public class Lexer {
 	public int getline() {
 		return line;
 	}
-
+	
+	public void error() {
+		System.out.printf("\nErro lexico, simbolo inesperado: '%c' - linha %d\n",peek,line);
+		System.exit(0);
+	}
 }

@@ -1,5 +1,5 @@
 app pessoa
- int cont;
+ int: cont;
  real altura, soma;
  start
 		 cont := 5;
