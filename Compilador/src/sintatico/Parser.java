@@ -3,6 +3,7 @@ package sintatico;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.Identity;
+import java.util.Scanner;
 
 import lexer.Lexer;
 import lexer.Tag;
@@ -14,11 +15,17 @@ public class Parser {
 	Env env = new Env();
 	Token tok;
 	int linha;
+	Scanner sc;
+	String aux1,aux2;
+	float num1,num2;
 	public Parser(FileReader fr) {
 		// TODO Auto-generated constructor stub
 		env = new Env();
+		aux1= new String();
+		aux2= new String();
 		lex  = new Lexer(fr,env);
 		linha=0;
+		sc= new Scanner(System.in); 
 	}
 
 
@@ -42,7 +49,7 @@ public class Parser {
 	}
 	
 	void error() {
-		System.out.printf("Erro sintatico, token inesperado: '%s' - linha %d\n",tok.toString(),linha);
+		System.out.printf("\nErro sintatico, token inesperado: '%s' - linha %d\n",tok.toString(),linha);
 		/*try {
 			throw new Exception();
 		} catch (Exception e) {
@@ -62,7 +69,9 @@ public class Parser {
 		eat(Tag.START);
 		stmtlist();
 		eat(Tag.STOP);
+		env.showItens();
 		eat(Tag.EOF);
+		
 	}
 	void decllist(){ //decl-list,decl, indenfier
 		do {
@@ -97,16 +106,35 @@ public class Parser {
 		switch(tok.getTag()) {
 			case Tag.WRITE:
 				eat(Tag.WRITE);eat(Tag.OPENPAR);
+				if( tok.getTag()==Tag.LITERAL)
+					System.out.printf(tok.toString()+"\n");
+				if( tok.getTag()==Tag.ID) {
+					aux1=env.getValue(tok.toString());
+					if(aux1!=null)
+						System.out.printf(aux1+"\n");
+					else
+						errorvar(tok.toString(),linha);
+				}
 				simpleexpr();
 				eat(Tag.CLOSEPAR);
 				break;
 			case Tag.READ:
 				eat(Tag.READ);eat(Tag.OPENPAR);
-				eat(Tag.ID);eat(Tag.CLOSEPAR);
+				if(tok.getTag()==Tag.ID) {
+					sc.hasNext();
+				}
+				aux1=sc.next();
+				if(!isNumeric(aux1))
+					errorvar(tok.toString(), linha);
+				env.setValue(tok.toString(), aux1);
+				eat(Tag.ID);
+				eat(Tag.CLOSEPAR);
 				break;
+				
+				
 			case Tag.IF:
 				eat(Tag.IF);
-				condition();
+				num1=condition();
 				eat(Tag.THEN);
 				stmtlist();
 				if(tok.getTag()==Tag.END)eat(Tag.END);
@@ -118,23 +146,26 @@ public class Parser {
 					error();
 				}
 				break;
+				
 			case Tag.REPEAT:
 				eat(Tag.REPEAT);
 				stmtlist();
 				stmtsuffix();
 				break;
+				
 			case Tag.WHILE:
 				eat(Tag.WHILE);
 				condition();
 				eat(Tag.DO);
 				stmtlist();
 				eat(Tag.END);
-
 				break;
+				
 			case Tag.ID:
+				aux1=tok.toString();
 				eat(Tag.ID);
 				eat(Tag.ATT);
-				simpleexpr();
+				env.setValue(aux1,Float.toString(simpleexpr()));
 				break;
 
 			default :
@@ -146,51 +177,96 @@ public class Parser {
 		}
 		
 	}
-	void simpleexpr() {//?ambiguidade
-		//if(tok==Tag.OPENPAR||tok==Tag.NUM||tok==Tag.ID||tok==Tag.NOT||tok==Tag.MINUS)
-			
-		//else {
-		term();
+	float simpleexpr() {//?ambiguidade
+		int op;	
+		float val1,val2;
+		val1=term();
 		while(tok.getTag()==Tag.PLUS||tok.getTag()==Tag.MINUS||tok.getTag()==Tag.OR)  {
+			op=tok.getTag();
 			addop();
-			term();
+			val2=term();
+			switch(op) {
+				case Tag.PLUS:
+					val1=val1+val2;
+					break;
+				case Tag.MINUS:
+					val1=val1-val2;
+					break;
+				case Tag.OR:
+					if(val1==1||val2==1)
+						val1=1;
+					else 
+						val1=0;
+					break;
+				}
 		}
-		
+		return val1;
 		//}
 	}
-	void term() {//ambiguidade
-			factora();
+	float term() {//ambiguidade
+			float val1,val2;
+			int op;
+			val1=factora();
 			while(tok.getTag()==Tag.MULT||tok.getTag()==Tag.DIV||tok.getTag()==Tag.AND) {
+				op=tok.getTag();
 				mulop();
-				factora();
+				val2=factora();
+				switch(tok.getTag()) {
+					case Tag.MULT:
+						val1=val1*val2;
+						break;
+					case Tag.DIV:
+						val1=val2/val2;
+						break;
+					case Tag.AND:
+						if( val1==val2)
+							val1=1;
+						else
+							val1=0;
+						break;
+				}
 			}
+			return val1;
 		
 	}
-	void factora() {	
+	float factora() {
+		float val = 0;
 		switch(tok.getTag()){
 			case Tag.NOT:
 				eat(Tag.NOT);
-				factor();
+				val=factor();
+				if(val==1)
+					val=0;
+				else 
+					val=1;
 				break;
 			case Tag.MINUS:
 				eat(Tag.MINUS);
-				factor();
+				val=factor();
+				val=val*-1;
 				break;
 			default :
-				factor();
+				val=factor();
 		}
+		return val;
 	}
-	void factor() {
+	float factor() {
+		float val=0;
 		switch(tok.getTag()) {
 			case Tag.ID:
+				aux1=env.getValue(tok.toString());
+				if( aux1==null|| aux1.equals(""))
+					errorvar(tok.toString(), linha);
+				val= Float.parseFloat(aux1);
 				eat(Tag.ID);
 				break;
 			case Tag.NUM://Valores do tipo real, estão recebendo a tag da palavra reservada "real"
+				val=Float.parseFloat(tok.toString());
 				eat(Tag.NUM);
 				break;
 			case Tag.OPENPAR:
 				eat(Tag.OPENPAR);
-				expression();
+				val=expression();
 				eat(Tag.CLOSEPAR);	
 				break;
 			case Tag.LITERAL:
@@ -199,14 +275,58 @@ public class Parser {
 			default :
 				error();
 		}
+		return val;
 	}
-	void expression() {
-		simpleexpr();
+	float expression() {
+		float val1,val2;
+		val1=simpleexpr();
+		int op;
 		while(tok.getTag()==Tag.EQ||tok.getTag()==Tag.GT||tok.getTag()==Tag.GE
 				||tok.getTag()==Tag.LT||tok.getTag()==Tag.LE||tok.getTag()==Tag.NE) {
+			op=tok.tag;
 			relop();
-			simpleexpr();
+			val2=simpleexpr();
+			switch(op) {
+				case Tag.EQ:
+					if(val1==val2)
+						val1=1;
+					else 
+						val1=0;
+					break;
+				case Tag.GT:
+					if(val1>val2)
+						val1=1;
+					else
+						val1=0;
+					break;
+				case Tag.GE:
+					if(val1>=val2)
+						val1=1;
+					else 
+						val1=0;
+					break;
+				case Tag.LT:
+					if(val1<val2)
+						val1=1;
+					else 
+						val1=0;
+					break;
+				case Tag.LE:
+					if(val1<=val2)
+						val1=1;
+					else 
+						val1=0;
+					break;
+				case Tag.NE:
+					if(val1!=val2)
+						val1=1;
+					else 
+						val1=0;
+					break;
+				
+			}
 		}
+		return val1;
 		
 	}
 	void relop() {
@@ -264,13 +384,25 @@ public class Parser {
 		}
 	}
 
-	void condition(){
-		expression();
+	float condition(){
+		return expression();
 	}
 	void stmtsuffix() {
 		eat(Tag.UNTIL);
 		condition();
+	
 	}
 
-	
+	public void errorvar(String var, int ln) {
+		System.out.printf("\nErro semântico: Valor invalido da variavel "+var+" na linha "+ln+"!\n");
+		System.exit(0);
+	}
+	public static boolean isNumeric(String strNum) {
+	    try {
+	        double d = Double.parseDouble(strNum);
+	    } catch (NumberFormatException | NullPointerException nfe) {
+	        return false;
+	    }
+	    return true;
+	}
 }

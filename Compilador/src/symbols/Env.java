@@ -9,26 +9,15 @@ import inter.*;
 public class Env {
 	//Tipo nome valor
 	private Hashtable table;
-//	protected Env up;
-	//protected Env botton;
-	
+
+	String str ;
+
 	public Env() { 
 		table = new Hashtable<Id,Word>();
-//	up=null;
-//		botton=null;
+		str= new String();
+
 	}
-	/*public void setBotton(Env botton) {
-		this.botton=botton;
-	}
-	public void setUp(Env up) {
-		this.up=up;
-	}
-	public Env getBotton() {
-		return botton;
-	}
-	public Env getUp() {
-		return up;
-	}*/
+
 	public void put( Id i,Token w) { //ID guarda o no nome //guarda a tipagem
 		table.put(i,w);
 		
@@ -40,6 +29,30 @@ public class Env {
 			System.out.printf(v.toString()+"\t"+k.name+"\t"+k.value+"\n");  	
         }); 
 			
+	}
+	public void setValue(String name,String value) {
+		Map<Id,Word> map = table; 
+		map.forEach((k, v) -> { 
+			if ( k.name.equals(name)) {
+				k.value=value;
+					
+			}
+		}); 
+		
+	}
+	
+	public String getValue(String name) {
+		Map<Id,Word> map = table; 
+		str=null;
+		map.forEach((k, v) -> { 
+			if ( k.name.equals(name)) {
+				str= new String (k.value);	
+			}
+		}); 
+		
+		
+		return str;
+		
 	}
 
 	public Id get(Token w) { //Busca em ascensão

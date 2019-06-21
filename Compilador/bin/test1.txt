@@ -7,3 +7,7 @@ coisa depois de end
 
 	 end
 	 write({Maior idade: });
+	 
+	 write so funciona para atomico
+	 
+	 *Verificar quando atribuir valor a variavel seu tipo antes

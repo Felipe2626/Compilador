@@ -2,6 +2,7 @@
  app seis
  int a, b, c, maior;
  start
+ 	write({Maior idade: });
 	 if ( a>b && a>c ) then
 	  	 read(a);
 		 read(b);
@@ -15,6 +16,6 @@
 			 maior := c
 		 end
 	 end;
-	 write({Maior idade: });
+	 
 	 write(maior)
  stop
