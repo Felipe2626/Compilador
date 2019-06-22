@@ -1,12 +1,12 @@
 app teste1
- int a, b, c;
- real result;
- int c;
+	 int a, b, c;
+	 real result;
+	 int c;
 start
- read (a);
- read (c);
- result := (a + b) -1;
- b := 10.23 + a + c;
- write(result);
- teste1 := 1
+	 read (a);
+	 read (c);
+	 b := 10.23 + a + c;
+	 result := (a + b) -1;
+	 write(result)
+	 %teste1 := 1
 stop 

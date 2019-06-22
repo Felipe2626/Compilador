@@ -11,7 +11,7 @@ public class Env {
 	private Hashtable table;
 
 	String str ;
-
+	boolean check;
 	public Env() { 
 		table = new Hashtable<Id,Word>();
 		str= new String();
@@ -40,7 +40,18 @@ public class Env {
 		}); 
 		
 	}
-	
+	public boolean existVar(String name) {
+		Map<Id,Word> map = table; 
+		check =false;
+		map.forEach((k, v) -> { 
+			if ( k.name.equals(name)) {
+				check=true; 
+			}
+		}); 
+		
+		
+		return check;
+	}
 	public String getValue(String name) {
 		Map<Id,Word> map = table; 
 		str=null;

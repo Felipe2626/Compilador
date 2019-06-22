@@ -1,8 +1,11 @@
 app mediapositiva
- int input;
+ int input,cont,soma,input;
  real media;
- start	
- 		 if ( cont= (-1)) then
+ start		
+ 		 input:=0;
+ 		 cont:=0;
+ 		 media:=0;
+ 		 if (cont= (-1)) then
  		  	media:=0.0
  		 end;
  		 soma:=1+1+1+1*1*1;

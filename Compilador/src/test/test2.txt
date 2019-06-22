@@ -1,12 +1,13 @@
 app cavalo
- int a;
- int b;
- real f, _f;
+	 int a;
+	 int b;
+	 real f, _f;
 start
- read (a);
- read (f);
- f := a * a;
- b := b + a/2 * (3 + 5);
- write(f);
- write(b)
+	 read (a);
+	 read (f);
+	 b:=0;
+	 f := a * a;
+	 b := b + a/2 * (3 + 5);
+	 write(f);
+	 write(b)
 stop

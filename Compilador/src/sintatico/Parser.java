@@ -1,8 +1,10 @@
 package sintatico;
 
+import java.awt.List;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.Identity;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import lexer.Lexer;
@@ -18,8 +20,13 @@ public class Parser {
 	Scanner sc;
 	String aux1,aux2;
 	float num1,num2;
+	ArrayList<Token> banktoks;
+	int loopstatus;//0 fora de loop,1 armazenando elemento do loop;2 consumindo loop
+	int index;
 	public Parser(FileReader fr) {
 		// TODO Auto-generated constructor stub
+		loopstatus=0;
+		banktoks= new ArrayList<Token>();
 		env = new Env();
 		aux1= new String();
 		aux2= new String();
@@ -31,7 +38,15 @@ public class Parser {
 
 	void getToken() {//Get next token
 		try {
-			tok=lex.scan();
+			if(loopstatus!=2)
+				tok=lex.scan();
+			if(loopstatus==1) {
+				banktoks.add(tok);
+			}
+			if(loopstatus==2) {
+				tok=banktoks.get(index);
+				index++;
+			}
 			linha=lex.getline();
 		} catch (IOException e) {
 			// TODO Auto-generated  catch block
@@ -136,20 +151,51 @@ public class Parser {
 				eat(Tag.IF);
 				num1=condition();
 				eat(Tag.THEN);
-				stmtlist();
-				if(tok.getTag()==Tag.END)eat(Tag.END);
+				if(num1==1)//Se o if for verdadeiro faça a condição
+					stmtlist();
+				else { //Coma todos os token ate achar end ou else
+					int contif=0;//Conta ifs na parte a ser ignorada 
+					
+					do{
+						if(tok.getTag()==Tag.IF)
+							contif++;
+						if(tok.getTag()==Tag.END&&contif>0)
+							contif--;
+						getToken();
+					}while((tok.getTag()!=Tag.END && tok.getTag()!=Tag.ELSE)||contif!=0); 
+				}
+				if(tok.getTag()==Tag.END)
+					eat(Tag.END);
 				else if(tok.getTag()==Tag.ELSE) {
 					eat(Tag.ELSE);
-					stmtlist();
+					if(num1==0)//Se o if for falso faça a condição
+						stmtlist();
+					else { // se não coma todos os token ate o final do else
+						int contif=0;//Conta ifs na parte a ser ignorada 
+						do{
+							if(tok.getTag()==Tag.IF)
+								contif++;
+							if(tok.getTag()==Tag.END&&contif>0)
+								contif--;
+							getToken();
+							
+						}while(tok.getTag()!=Tag.END || contif!=0); 
+					}
 					eat(Tag.END);
-				}else {
-					error();
-				}
+					}else {
+						error();
+					}
+				
 				break;
 				
 			case Tag.REPEAT:
+				if(loopstatus==0) {
+					banktoks.add(tok);
+					loopstatus=1;
+				}
 				eat(Tag.REPEAT);
-				stmtlist();
+				stmtlist(); //Armazenas todas os token dentro de um loop
+				//loopstatus=0;
 				stmtsuffix();
 				break;
 				
@@ -162,7 +208,11 @@ public class Parser {
 				break;
 				
 			case Tag.ID:
+				
 				aux1=tok.toString();
+				aux2=env.getValue(aux1);
+				if(aux2==null)
+					errorvar(tok.toString(),linha);
 				eat(Tag.ID);
 				eat(Tag.ATT);
 				env.setValue(aux1,Float.toString(simpleexpr()));
@@ -207,16 +257,16 @@ public class Parser {
 			float val1,val2;
 			int op;
 			val1=factora();
-			while(tok.getTag()==Tag.MULT||tok.getTag()==Tag.DIV||tok.getTag()==Tag.AND) {
+			while(tok.getTag()==Tag.MULT||tok.getTag()==Tag.DIV ||tok.getTag()==Tag.AND) {
 				op=tok.getTag();
 				mulop();
 				val2=factora();
-				switch(tok.getTag()) {
+				switch(op) {
 					case Tag.MULT:
 						val1=val1*val2;
 						break;
 					case Tag.DIV:
-						val1=val2/val2;
+						val1=val1/val2;
 						break;
 					case Tag.AND:
 						if( val1==val2)
@@ -388,13 +438,21 @@ public class Parser {
 		return expression();
 	}
 	void stmtsuffix() {
+		float rtn;
 		eat(Tag.UNTIL);
-		condition();
+		rtn=condition();
+		if(rtn==1) {
+			loopstatus=2; //o loop sera repitido
+			index=0;
+		}if(rtn==0) {
+			loopstatus=0;
+			banktoks.clear();
+		}
 	
 	}
 
 	public void errorvar(String var, int ln) {
-		System.out.printf("\nErro semântico: Valor invalido da variavel "+var+" na linha "+ln+"!\n");
+		System.out.printf("\nErro semântico: Variável  "+var+" invalida na linha "+ln+"!\n");
 		System.exit(0);
 	}
 	public static boolean isNumeric(String strNum) {
