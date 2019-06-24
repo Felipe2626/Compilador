@@ -21,7 +21,7 @@ public class Parser {
 	String aux1,aux2;
 	float num1,num2;
 	ArrayList<Token> banktoks;
-	int loopstatus;//0 fora de loop,1 armazenando elemento do loop;2 consumindo loop
+	int loopstatus;//0 fora de loop,1 armazenando elemento do loop;2 consumindo loop//3 armazena sem consumir
 	int index;
 	public Parser(FileReader fr) {
 		// TODO Auto-generated constructor stub
@@ -38,7 +38,7 @@ public class Parser {
 
 	void getToken() {//Get next token
 		try {
-			if(loopstatus!=2)
+			if(loopstatus!=2&&loopstatus!=3)
 				tok=lex.scan();
 			if(loopstatus==1) {
 				banktoks.add(tok);
@@ -46,6 +46,10 @@ public class Parser {
 			if(loopstatus==2) {
 				tok=banktoks.get(index);
 				index++;
+			}
+			if( loopstatus==3) {
+				banktoks.add(tok);
+				lex.scan();
 			}
 			linha=lex.getline();
 		} catch (IOException e) {
@@ -200,11 +204,49 @@ public class Parser {
 				break;
 				
 			case Tag.WHILE:
+				float rtn;
+				int contopen;
+				if(loopstatus==0) { 
+					banktoks.add(tok);
+					loopstatus=1; //Entra no estado de armazenamento
+				}
 				eat(Tag.WHILE);
-				condition();
+				rtn=condition();
+				if( rtn == 0 ) { //Se for falso, le todas os toks ate achar o end
+					contopen=0;
+					banktoks.clear();
+					if(loopstatus==2) {
+						loopstatus=0;
+
+						getToken();
+						break;
+					}
+					do{
+						if(tok.getTag()==Tag.IF||tok.getTag()==Tag.WHILE)
+							contopen++;
+						if(tok.getTag()==Tag.END&&contopen>0)
+							contopen--;
+						getToken();
+					}while((tok.getTag()!=Tag.END)||contopen!=0);
+					eat(Tag.END);
+					loopstatus=0;
+					break;
+				}
+
 				eat(Tag.DO);
+				
 				stmtlist();
-				eat(Tag.END);
+				if(loopstatus==1) {
+					loopstatus=2;
+
+					//eat(Tag.END);
+
+					tok = new  Token(Tag.DOTCOMMA);
+					break;
+				}
+				
+				tok = new  Token(Tag.DOTCOMMA);
+				index=0;
 				break;
 				
 			case Tag.ID:

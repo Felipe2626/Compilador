@@ -1,20 +1,14 @@
 app mediapositiva
- int input,cont,soma,input;
+ int a,b,input,cont,soma,input;
  real media;
  start		
- 		 input:=0;
- 		 cont:=0;
- 		 media:=0;
- 		 if (cont= (-1)) then
- 		  	media:=0.0
- 		 end;
- 		 soma:=1+1+1+1*1*1;
-		 repeat	
-			 write({Insira um valor: });
-			 read (input);
-			 media:=media+input;
-			 media:=media/2
-		 until(cont=(-1));
-		 write({Media: });
-		 write (media)
+ 		 a:=3;
+ 		 b:=0;
+ 		 while ( a> b) do
+ 		 	write (b);
+ 		 	if ( 2 = b) then 
+ 		 		write ({rato})
+ 		 	end;
+ 		 	b:=b+1
+ 		 end
   stop
