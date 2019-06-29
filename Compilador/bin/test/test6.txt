@@ -2,18 +2,6 @@
  app seis
  int a, b, c, maior;
  start
-	 a:=2;
-	 b:=2;
-	 c:=3;
-	 if (( a>b) && (a>c) ) then
-		 maior := a
-	 else
-		 if (b>c) then
-			 maior := b
-		 else
-			 maior := c
-		 end
-	 end;
-	 write({Maior idade: });
-	 write(maior)
+	 a:=2.2
+
  stop
