@@ -129,10 +129,10 @@ public class Parser {
 					System.out.printf(tok.toString()+"\n");
 				if( tok.getTag()==Tag.ID) {
 					aux1=env.getValue(tok.toString());
-					if(aux1!=null)
+					/*if(aux1!=null)
 						System.out.printf(aux1+"\n");
 					else
-						errorvar(tok.toString(),linha);
+						errorvar(tok.toString(),linha);*/
 				}
 				simpleexpr();
 				eat(Tag.CLOSEPAR);
@@ -142,7 +142,7 @@ public class Parser {
 				if(tok.getTag()==Tag.ID) {
 					sc.hasNext();
 				}
-				aux1=sc.next();
+				//aux1=sc.next();
 				if(!isNumeric(aux1))
 					errorvar(tok.toString(), linha);
 				env.setValue(tok.toString(), aux1);
@@ -250,14 +250,21 @@ public class Parser {
 				break;
 				
 			case Tag.ID:
-				
+				int tip = env.getType(tok.toString());
+				float retorno;
+				int valinteiro;
 				aux1=tok.toString();
 				aux2=env.getValue(aux1);
 				if(aux2==null)
 					errorvar(tok.toString(),linha);
 				eat(Tag.ID);
 				eat(Tag.ATT);
-				env.setValue(aux1,Float.toString(simpleexpr()));
+				retorno=simpleexpr();
+				if( retorno!=(int)retorno)
+					errorvar(aux1.toString(), linha);
+				aux2=Float.toString(retorno);
+				
+				//env.setValue(aux1,aux2);
 				break;
 
 			default :
@@ -497,6 +504,7 @@ public class Parser {
 		System.out.printf("\nErro semântico: Variável  "+var+" invalida na linha "+ln+"!\n");
 		System.exit(0);
 	}
+
 	public static boolean isNumeric(String strNum) {
 	    try {
 	        double d = Double.parseDouble(strNum);

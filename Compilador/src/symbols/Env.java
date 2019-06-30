@@ -3,6 +3,8 @@ package symbols;
 import java.util.Hashtable;
 import java.util.Map;
 
+import javax.swing.text.StyledEditorKit.BoldAction;
+
 import lexer.*;
 import inter.*;
 
@@ -12,14 +14,19 @@ public class Env {
 
 	String str ;
 	boolean check;
+	int type;
 	public Env() { 
 		table = new Hashtable<Id,Word>();
 		str= new String();
 
 	}
 
-	public void put( Id i,Token w) { //ID guarda o no nome //guarda a tipagem
+	public boolean put( Id i,Token w) { //ID guarda o no nome //guarda a tipagem
+		if(existVar(w.toString())) {
+			return false;
+		}
 		table.put(i,w);
+		return true;
 		
 	}
 	public void showItens() {
@@ -77,4 +84,16 @@ public class Env {
 			return found;
 		return null;
 	}
+	public int getType(String name) {
+		Map<Id,Word> map = table; 
+		type=0;
+		map.forEach((k, v) -> { 
+			if ( k.name.equals(name)) {
+				type=v.getTag();
+			}
+		}); 
+		return type;
+	}
+
+	
 }

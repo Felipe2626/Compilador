@@ -111,7 +111,7 @@ public class Lexer {
 				return w;
 			}
 			w = new Word(buffer.toString(), Tag.LITERAL); //nao cria palavras repetidas
-			 buff=peek;
+			buff=peek;
 			words.put(buffer.toString(), w);
 			return w;
 		}
@@ -185,7 +185,10 @@ public class Lexer {
 			String s = buffer.toString();
 		    buff=peek;
 			Word w = (Word)words.get(s);
-			
+			if (type!=0&& w!=null) {
+				System.out.printf("Erro , linha %d, váriavel %s já declarada/ é uma palavra reservada",line,s);
+				System.exit(0);
+			}
 			if(w != null) { //Encerra leitura de palavras reservadas
 				setTypeSymbol(w); //Ate ler um ;, o algotimo seta que todos os ID seguintes terao o tipo declarado
 //				if(w.toString().equals("start")) {//aumenta o nivel da tabela de simbolos
@@ -194,7 +197,8 @@ public class Lexer {
 				return w;
 			}
 			w = new Word(s, Tag.ID); //nao cria palavras repetidas
-			setTableSymbol(w); //Guarda na tabela de simbolos
+			setTableSymbol(w);
+			 //Guarda na tabela de simbolos
 			//env.put( );
 			words.put(s, w);
 			return w;

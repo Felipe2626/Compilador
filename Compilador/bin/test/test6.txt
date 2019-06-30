@@ -1,7 +1,7 @@
  %Um programa para calcular a maior idade
  app seis
- int a, b, c, maior;
+ real a;
  start
-	 a:=2.2
+	 e:=22.5+2.5
 
  stop
