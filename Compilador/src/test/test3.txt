@@ -1,7 +1,7 @@
 app pessoa
  	int cont,a,b;
 	real altura, soma;
-	real media;
+	real media
  start	
  		 a:=3;
  		 b:=1;

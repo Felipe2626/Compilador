@@ -1,7 +1,6 @@
  %Um programa para calcular a maior idade
  app seis
- real a;
+ real a
  start
-	 e:=22.5+2.5
-
+	 a:=22.5+2.5
  stop

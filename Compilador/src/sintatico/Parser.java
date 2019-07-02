@@ -98,7 +98,9 @@ public class Parser {
 				eat(Tag.INT);
 				do {
 					eat(Tag.ID);
-					if(tok.getTag()==Tag.DOTCOMMA) {//;
+					if(tok.getTag()==Tag.START)
+						break;
+					if(tok.getTag()==Tag.DOTCOMMA ) {//;
 						eat(Tag.DOTCOMMA);
 						break;
 					}
@@ -108,6 +110,9 @@ public class Parser {
 				eat(Tag.REAL);
 				do {
 					eat(Tag.ID);
+		
+					if(tok.getTag()==Tag.START)
+						break;
 					if(tok.getTag()==Tag.DOTCOMMA) {
 						eat(Tag.DOTCOMMA);
 						break;
@@ -124,28 +129,29 @@ public class Parser {
 	void stmtlist() {
 		switch(tok.getTag()) {
 			case Tag.WRITE:
-				eat(Tag.WRITE);eat(Tag.OPENPAR);
-				if( tok.getTag()==Tag.LITERAL)
-					System.out.printf(tok.toString()+"\n");
-				if( tok.getTag()==Tag.ID) {
-					aux1=env.getValue(tok.toString());
+				eat(Tag.WRITE);
+				eat(Tag.OPENPAR);
+			//	if( tok.getTag()==Tag.LITERAL)
+				//	System.out.printf(tok.toString()+"\n");
+			//	if( tok.getTag()==Tag.ID) {
+				//	aux1=env.getValue(tok.toString());
 					/*if(aux1!=null)
 						System.out.printf(aux1+"\n");
 					else
 						errorvar(tok.toString(),linha);*/
-				}
+			//	}
 				simpleexpr();
 				eat(Tag.CLOSEPAR);
 				break;
 			case Tag.READ:
 				eat(Tag.READ);eat(Tag.OPENPAR);
-				if(tok.getTag()==Tag.ID) {
-					sc.hasNext();
-				}
+			///	if(tok.getTag()==Tag.ID) {
+			//		sc.hasNext();
+			//	}
 				//aux1=sc.next();
-				if(!isNumeric(aux1))
-					errorvar(tok.toString(), linha);
-				env.setValue(tok.toString(), aux1);
+	//			if(!isNumeric(aux1))
+	//				errorvar(tok.toString(), linha);
+				//env.setValue(tok.toString(), aux1);
 				eat(Tag.ID);
 				eat(Tag.CLOSEPAR);
 				break;
@@ -193,60 +199,17 @@ public class Parser {
 				break;
 				
 			case Tag.REPEAT:
-				if(loopstatus==0) {
-					banktoks.add(tok);
-					loopstatus=1;
-				}
 				eat(Tag.REPEAT);
-				stmtlist(); //Armazenas todas os token dentro de um loop
-				//loopstatus=0;
+				stmtlist();
 				stmtsuffix();
 				break;
 				
 			case Tag.WHILE:
-				float rtn;
-				int contopen;
-				if(loopstatus==0) { 
-					banktoks.add(tok);
-					loopstatus=1; //Entra no estado de armazenamento
-				}
 				eat(Tag.WHILE);
-				rtn=condition();
-				if( rtn == 0 ) { //Se for falso, le todas os toks ate achar o end
-					contopen=0;
-					banktoks.clear();
-					if(loopstatus==2) {
-						loopstatus=0;
-
-						getToken();
-						break;
-					}
-					do{
-						if(tok.getTag()==Tag.IF||tok.getTag()==Tag.WHILE)
-							contopen++;
-						if(tok.getTag()==Tag.END&&contopen>0)
-							contopen--;
-						getToken();
-					}while((tok.getTag()!=Tag.END)||contopen!=0);
-					eat(Tag.END);
-					loopstatus=0;
-					break;
-				}
-
+				condition();
 				eat(Tag.DO);
-				
 				stmtlist();
-				if(loopstatus==1) {
-					loopstatus=2;
-
-					//eat(Tag.END);
-
-					tok = new  Token(Tag.DOTCOMMA);
-					break;
-				}
-				
-				tok = new  Token(Tag.DOTCOMMA);
-				index=0;
+				eat(Tag.END);
 				break;
 				
 			case Tag.ID:
@@ -260,7 +223,7 @@ public class Parser {
 				eat(Tag.ID);
 				eat(Tag.ATT);
 				retorno=simpleexpr();
-				if( retorno!=(int)retorno)
+				if( retorno!=(int)retorno && env.getType(aux1)==Tag.INT )
 					errorvar(aux1.toString(), linha);
 				aux2=Float.toString(retorno);
 				
@@ -354,9 +317,9 @@ public class Parser {
 		switch(tok.getTag()) {
 			case Tag.ID:
 				aux1=env.getValue(tok.toString());
-				if( aux1==null|| aux1.equals(""))
-					errorvar(tok.toString(), linha);
-				val= Float.parseFloat(aux1);
+				//if( aux1==null|| aux1.equals(""))
+				//	errorvar(tok.toString(), linha);
+			//	val= Float.parseFloat(aux1);
 				eat(Tag.ID);
 				break;
 			case Tag.NUM://Valores do tipo real, estão recebendo a tag da palavra reservada "real"
@@ -489,14 +452,14 @@ public class Parser {
 	void stmtsuffix() {
 		float rtn;
 		eat(Tag.UNTIL);
-		rtn=condition();
-		if(rtn==1) {
+		condition();
+	/*	if(rtn==1) {
 			loopstatus=2; //o loop sera repitido
 			index=0;
 		}if(rtn==0) {
 			loopstatus=0;
 			banktoks.clear();
-		}
+		}*/
 	
 	}
 

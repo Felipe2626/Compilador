@@ -185,10 +185,7 @@ public class Lexer {
 			String s = buffer.toString();
 		    buff=peek;
 			Word w = (Word)words.get(s);
-			if (type!=0&& w!=null) {
-				System.out.printf("Erro , linha %d, váriavel %s já declarada/ é uma palavra reservada",line,s);
-				System.exit(0);
-			}
+
 			if(w != null) { //Encerra leitura de palavras reservadas
 				setTypeSymbol(w); //Ate ler um ;, o algotimo seta que todos os ID seguintes terao o tipo declarado
 //				if(w.toString().equals("start")) {//aumenta o nivel da tabela de simbolos
