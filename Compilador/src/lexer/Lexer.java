@@ -225,7 +225,7 @@ public class Lexer {
 			  wtipo=words.get("int");
 		  if(type==Tag.REAL)
 			  wtipo=words.get("real");
-		  env.put(ide,wtipo);
+		  //env.put(ide,wtipo);
 		}
 	}
 	public int getline() {

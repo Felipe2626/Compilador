@@ -7,9 +7,11 @@ import java.security.Identity;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import inter.Id;
 import lexer.Lexer;
 import lexer.Tag;
 import lexer.Token;
+import lexer.Word;
 import symbols.Env;
 
 public class Parser {
@@ -69,12 +71,6 @@ public class Parser {
 	
 	void error() {
 		System.out.printf("\nErro sintatico, token inesperado: '%s' - linha %d\n",tok.toString(),linha);
-		/*try {
-			throw new Exception();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 		 System.exit(0); 
 	}
 	public void S() {//Implement program,identifier
@@ -97,7 +93,11 @@ public class Parser {
 			if(tok.getTag()==Tag.INT) {
 				eat(Tag.INT);
 				do {
+					aux1=tok.toString();
 					eat(Tag.ID);
+					if(env.getValue(aux1)!=null)
+						errordec(aux1, linha);
+					addtableSyn(aux1,Tag.INT);
 					if(tok.getTag()==Tag.START)
 						break;
 					if(tok.getTag()==Tag.DOTCOMMA ) {//;
@@ -109,8 +109,11 @@ public class Parser {
 			}else if(tok.getTag()==Tag.REAL) {
 				eat(Tag.REAL);
 				do {
+					if(env.getValue(tok.toString())!=null)
+						errordec(tok.toString(), linha);
+					aux1=tok.toString();
 					eat(Tag.ID);
-		
+					addtableSyn(aux1,Tag.REAL);
 					if(tok.getTag()==Tag.START)
 						break;
 					if(tok.getTag()==Tag.DOTCOMMA) {
@@ -126,32 +129,26 @@ public class Parser {
 			
 		}while(tok.getTag()!=Tag.START);
 	}
+	void addtableSyn(String name,int Type) {
+		  Word wtipo = null;
+		  Id ide = new Id(name,""); 
+		  if(Type==Tag.INT)
+			  wtipo=new Word("int",Tag.INT);
+		  if(Type==Tag.REAL)
+			  wtipo=new Word("real",Tag.REAL);
+		  env.put(ide,wtipo);
+	}
 	void stmtlist() {
 		switch(tok.getTag()) {
 			case Tag.WRITE:
 				eat(Tag.WRITE);
 				eat(Tag.OPENPAR);
-			//	if( tok.getTag()==Tag.LITERAL)
-				//	System.out.printf(tok.toString()+"\n");
-			//	if( tok.getTag()==Tag.ID) {
-				//	aux1=env.getValue(tok.toString());
-					/*if(aux1!=null)
-						System.out.printf(aux1+"\n");
-					else
-						errorvar(tok.toString(),linha);*/
-			//	}
+
 				simpleexpr();
 				eat(Tag.CLOSEPAR);
 				break;
 			case Tag.READ:
 				eat(Tag.READ);eat(Tag.OPENPAR);
-			///	if(tok.getTag()==Tag.ID) {
-			//		sc.hasNext();
-			//	}
-				//aux1=sc.next();
-	//			if(!isNumeric(aux1))
-	//				errorvar(tok.toString(), linha);
-				//env.setValue(tok.toString(), aux1);
 				eat(Tag.ID);
 				eat(Tag.CLOSEPAR);
 				break;
@@ -226,7 +223,6 @@ public class Parser {
 				if( retorno!=(int)retorno && env.getType(aux1)==Tag.INT )
 					errorvar(aux1.toString(), linha);
 				aux2=Float.toString(retorno);
-				
 				//env.setValue(aux1,aux2);
 				break;
 
@@ -465,6 +461,10 @@ public class Parser {
 
 	public void errorvar(String var, int ln) {
 		System.out.printf("\nErro semântico: Variável  "+var+" invalida na linha "+ln+"!\n");
+		System.exit(0);
+	}
+	public void errordec(String var, int ln) {
+		System.out.printf("\nErro semântico: Variável  "+var+" na linha "+ln+" já foi declarada!\n");
 		System.exit(0);
 	}
 
